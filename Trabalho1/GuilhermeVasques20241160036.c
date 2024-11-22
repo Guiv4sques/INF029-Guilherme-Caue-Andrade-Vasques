@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include "GuilhermeVasques20241160036.h" // Substitua pelo seu arquivo de header renomeado
 #include <stdlib.h>
+#include <string.h>
 
 DataQuebrada quebraData(char data[]);
 
@@ -92,13 +93,14 @@ int teste(int a)
  */
 int q1(char data[])
 {
+
   int datavalida = 1;
 
   //quebrar a string data em strings sDia, sMes, sAno
   int TAM = strlen(data);
 
-  for(int i = 0; i < TAM; i++)
-    if(data[i] != '/' && !(data[i] >= '0' && data[i] <= '9')) datavalida = 0;
+  for(int i=0; i<TAM; i++)
+    if(data[i]!='/' && !(data[i]>='0' && data[i]<='9')) datavalida = 0;
 
   DataQuebrada DataQ = quebraData(data);
 
@@ -108,7 +110,7 @@ int q1(char data[])
 
   if(dia<1 || dia>31 || mes<1 || mes>12) datavalida = 0;
   
-  if(dia > DiasNoMes(mes, ano)) datavalida = 0;
+  if(dia > Dias(mes, ano)) datavalida = 0;
 
 
   //printf("%s\n", data);
@@ -118,7 +120,7 @@ int q1(char data[])
   else
       return 0;
 }
-
+}
 
 
 /*
@@ -137,67 +139,33 @@ int q1(char data[])
  */
 DiasMesesAnos q2(char datainicial[], char datafinal[])
 {
-
-    //calcule os dados e armazene nas três variáveis a seguir
     DiasMesesAnos dma;
-
     if (q1(datainicial) == 0){
       dma.retorno = 2;
+
       return dma;
-    }else if (q1(datafinal) == 0){
+    }
+    else if (q1(datafinal) == 0){
       dma.retorno = 3;
+
       return dma;
-    }else{
-      //verifique se a data final não é menor que a data inicial
-      DataQuebrada inicio, fim; 
-  inicio = quebraData(datainicial);
-  fim = quebraData(datafinal);
-  
-  if(fim.iAno < inicio.iAno || ( fim.iAno == inicio.iAno && fim.iMes < inicio.iMes) || ( fim.iAno == inicio.iAno && fim.iMes == inicio.iMes && fim.iDia < inicio.iDia))
-  {
-      //calcule a distancia entre as datas
-      //Verificar Bissexto de ambas as datas
-  int BissextoInicio = 0, BissextoFinal = 0;
-  BissextoInicio = VerificadorBissexto(inicio.iAno);
-  BissextoFinal = VerificadorBissexto(fim.iAno);
-  
-  dma.qtdAnos = fim.iAno - inicio.iAno;
-
-  dma.qtdMeses = fim.iMes - inicio.iMes;
-  if(dma.qtdMeses != 0)
-  {
-    if(dma.qtdMeses < 0)
-    {
-      dma.qtdMeses = dma.qtdMeses + 12;
-      dma.qtdAnos--;
     }
-  }
-  
-  dma.qtdDias = fim.iDia - inicio.iDia;
-  if(dma.qtdDias != 0)
-  {
-    if(dma.qtdDias < 0)
-    {
-      dma.qtdDias = dma.qtdDias + DiasNoMes(inicio.iMes, inicio.iAno);
-      if(BissextoInicio == 1 && inicio.iMes == 2)
-      {
-        dma.qtdDias--; //desconsiderar o bissexto nessa linha apenas
-      }
-      dma.qtdMeses--;
-    }
-    if((BissextoInicio == 1 && inicio.iMes <= 2 && inicio.iDia < 29) && ((fim.iAno==inicio.iAno&&fim.iMes>2) ||(fim.iAno>inicio.iAno&&fim.iMes<2)))
-      {
-      dma.qtdDias++;
-      }
-    if((BissextoFinal == 1 && fim.iMes > 2))
-      {
-      dma.qtdDias++;
-      }
-  }
+    else{
+      DataQuebrada dtIncial = quebraData(datainicial);
+      DataQuebrada dtFinal = quebraData(datafinal);
+      
+      int Gap, DiasIncial, DiasFinal;
 
+      DiasIncial = DiasData(dtIncial);
+      DiasFinal = DiasData(dtFinal);
+      
+      if(DiasIncial > DiasFinal){
+        dma.retorno = 4;
+        return dma;
+      } 
 
-      //se tudo der certo
-      dma.retorno = 1;
+      Gap = DiasFinal - DiasIncial;
+      GapEmData(Gap, &dma, dtIncial.iMes, dtIncial.iAno);
       return dma;
       
     }
@@ -256,7 +224,35 @@ int q3(char *texto, char c, int isCaseSensitive)
  */
 int q4(char *strTexto, char *strBusca, int posicoes[30])
 {
-    int qtdOcorrencias = -1;
+    int qtdOcorrencias = 0;
+    int position = 0, aux;
+    int i, j, k;
+
+    for(i = 0; i < strlen(strTexto) - strlen(strBusca); i++){
+      aux = 0;
+      k = i;
+      for(j = 0; j < strlen(strBusca); j++){
+        if(strTexto[k] == -61 || strBusca[j] == -61){
+          continue;
+        }
+        else if(strTexto[k] == strBusca[j]){
+          aux++;
+          k++;
+        }
+        else{
+          break;
+        }
+      }
+
+      if(aux == strlen(strBusca)){
+        qtdOcorrencias++;
+        posicoes[position] = i + 1;
+        posicoes[position + 1] = k;
+        position += 2;
+        i += strlen(strBusca) - 1;
+      }
+
+    }
 
     return qtdOcorrencias;
 }
@@ -271,42 +267,18 @@ int q4(char *strTexto, char *strBusca, int posicoes[30])
     Número invertido
  */
 
-int q4(char *strTexto, char *strBusca, int posicoes[30])
+int q5(int num)
 {
-    int qtdOcorrencias = 0;
-    int pos = 0, achou;
-    int i, j, k;
+    int numinvert= 0, aux = 0;
 
-    for(i = 0; i < strlen(strTexto); i++)
+    while(num != 0)
     {
-      achou = 0;
-      k = i;
-      for(j = 0; j < strlen(strBusca); j++)
-      {
-        if(strTexto[k] == -61)
-        {
-          k++;
-        }
-        if(strTexto[k] == strBusca[j])
-        {
-          achou++;
-          k++;
-        }
-        else{
-          break;
-        }
-      }
-
-      if(achou == strlen(strBusca))
-      {
-        qtdOcorrencias++;
-        posicoes[pos] = i + 1;
-        posicoes[pos + 1] = k;
-        pos += 2;
-        i += strlen(strBusca) - 1;
-      }
-
-    return qtdOcorrencias;
+      aux = num % 10;
+      invert= (invert*10) + aux;
+      num/=10;
+    }
+    
+    return invert;
 }
 
 /*
@@ -322,20 +294,20 @@ int q4(char *strTexto, char *strBusca, int posicoes[30])
 int q6(int numerobase, int numerobusca)
 {
     int qtdOcorrencias = 0;
-    int digitosBusca = 10, verificadorBusca = numerobusca;
+    int Busca = 10, VerificadorDeBusca = numerobusca;
 
-    while(verificadorBusca/10 != 0)
+    while(VerificadorDeBusca/10!=0)
     {
-      digitosBusca*=10;
-      verificadorBusca/=10;
+      Busca*=10;
+      VerificadorDeBusca/=10;
     }
 
-    while(numerobase != 0)
+    while(numerobase!=0)
     {
-      if(numerobase % digitosBusca == numerobusca)
+      if(numerobase%Busca == numerobusca)
       {  
         qtdOcorrencias++; 
-        numerobase/=digitosBusca;
+        numerobase/=Busca;
       }else numerobase/=10;
     }
 
@@ -403,11 +375,10 @@ DataQuebrada quebraData(char data[]){
   return dq;
 }
 
-int DiasNoMes(int mes, int ano)
+int Dias(int mes, int ano)
 {
   int Bissexto = 0;
   if((ano % 4 == 0 && ano % 100 != 0) || ano % 400 == 0) Bissexto = 1;
-
   if(mes == 4 || mes == 6 || mes == 9 || mes == 11) return 30;
   else if(mes == 2)
   {
@@ -415,27 +386,6 @@ int DiasNoMes(int mes, int ano)
     else return 28;
   }
   else return 31;
-}
-
-int CopiarTextoInteiro(char *texto, int *textoInteiro)
-{
-    int texto_int[100];
-    int i, j;
-    for (i = 0; texto[i] != '\0'; i ++)
-    {
-        texto_int[i] = texto[i];
-        texto_int[i + 1] = texto[i + 1];
-    }
-    int k = 0;
-    for (j = 0; j < i; j++)
-    {
-        if (texto_int[j] != -61)
-        {
-            textoInteiro[k] = texto_int[j];
-            k++;
-        }
-    }
-    return k;
 }
 
 int VerificadorBissexto(int ano)
