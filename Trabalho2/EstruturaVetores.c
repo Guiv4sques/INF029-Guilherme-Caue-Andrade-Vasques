@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #define TAM 10
 
+#include "EstruturaVetores.h"
+
 #define SUCESSO 0
 #define JA_TEM_ESTRUTURA_AUXILIAR -1
 #define POSICAO_INVALIDA -2
