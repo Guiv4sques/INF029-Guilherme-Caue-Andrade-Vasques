@@ -41,7 +41,7 @@ int criarEstruturaAuxiliar(int posicao, int tamanho) {
     return SUCESSO;
 }
 
-int inserirElemento(int posicao, int valor) {
+int inserirNumeroEmEstrutura(int posicao, int valor) {
     if (verificarPosicao(posicao) == POSICAO_INVALIDA) return POSICAO_INVALIDA;
     if (vetorPrincipal[posicao - 1].elementos == NULL) return SEM_ESTRUTURA_AUXILIAR;
     if (vetorPrincipal[posicao - 1].qtdElementos == vetorPrincipal[posicao - 1].capacidade) return SEM_ESPACO;
@@ -51,7 +51,7 @@ int inserirElemento(int posicao, int valor) {
     return SUCESSO;
 }
 
-int removerUltimoElemento(int posicao) {
+int excluirNumeroDoFinaldaEstrutura(int posicao) {
     if (verificarPosicao(posicao) == POSICAO_INVALIDA) return POSICAO_INVALIDA;
     if (vetorPrincipal[posicao - 1].elementos == NULL) return SEM_ESTRUTURA_AUXILIAR;
     if (vetorPrincipal[posicao - 1].qtdElementos == 0) return ESTRUTURA_AUXILIAR_VAZIA;
@@ -60,7 +60,7 @@ int removerUltimoElemento(int posicao) {
     return SUCESSO;
 }
 
-int removerElementoEspecifico(int posicao, int valor) {
+int excluirNumeroEspecificoDeEstrutura(int posicao, int valor) {
     if (verificarPosicao(posicao) == POSICAO_INVALIDA) return POSICAO_INVALIDA;
     if (vetorPrincipal[posicao - 1].elementos == NULL) return SEM_ESTRUTURA_AUXILIAR;
     if (vetorPrincipal[posicao - 1].qtdElementos == 0) return ESTRUTURA_AUXILIAR_VAZIA;
@@ -77,7 +77,7 @@ int removerElementoEspecifico(int posicao, int valor) {
     return NUMERO_INEXISTENTE;
 }
 
-int recuperarElementos(int posicao, int vetorAux[]) {
+int getDadosEstruturaAuxiliar(int posicao, int vetorAux[]) {
     if (verificarPosicao(posicao) == POSICAO_INVALIDA) return POSICAO_INVALIDA;
     if (vetorPrincipal[posicao - 1].elementos == NULL) return SEM_ESTRUTURA_AUXILIAR;
 
@@ -87,8 +87,8 @@ int recuperarElementos(int posicao, int vetorAux[]) {
     return SUCESSO;
 }
 
-int recuperarElementosOrdenados(int posicao, int vetorAux[]) {
-    if (recuperarElementos(posicao, vetorAux) != SUCESSO) return POSICAO_INVALIDA;
+int getDadosOrdenadosEstruturaAuxiliar(int posicao, int vetorAux[]) {
+    if (getDadosEstruturaAuxiliar(posicao, vetorAux) != SUCESSO) return POSICAO_INVALIDA;
 
     int qtd = vetorPrincipal[posicao - 1].qtdElementos;
     for (int i = 0; i < qtd - 1; i++) {
@@ -103,7 +103,7 @@ int recuperarElementosOrdenados(int posicao, int vetorAux[]) {
     return SUCESSO;
 }
 
-int getDadosOrdenadosDeTodasEstruturasAuxiliares(int vet[]) {
+int getDadosDeTodasEstruturasAuxiliares(int vet[]) {
     int total = 0;
     for (int i = 0; i < TAMANHO_MAX; i++) {
         if (vetorPrincipal[i].elementos != NULL) {
@@ -126,6 +126,61 @@ int getDadosOrdenadosDeTodasEstruturasAuxiliares(int vet[]) {
     return total > 0 ? SUCESSO : TODAS_ESTRUTURAS_AUXILIARES_VAZIAS;
 }
 
+void bubbleSort(int * vetor, int size) 
+{
+    int i = 1;
+    int aux;
+    int troca = 1;
+    while (troca) 
+    {
+        troca = 0;
+        i = 1;
+        while (i < size) 
+        {
+            if (vetor[i] < vetor[i - 1]) 
+            {
+                aux = vetor[i];
+                vetor[i] = vetor[i - 1];
+                vetor[i - 1] = aux;
+                troca = 1;
+            }
+            i++;
+        }
+    }
+}
+
+int getDadosOrdenadosDeTodasEstruturasAuxiliares(int vetorAux[])
+{   
+    
+    getDadosDeTodasEstruturasAuxiliares(vetorAux);
+    
+    int size = 0;
+
+    int areAllEmpty = 1;
+
+    for (int i = 0; i < 10; i++) 
+    {
+        if (vetorPrincipal[i].elementos != NULL)
+        {
+            if (vetorPrincipal[i].capacidade != 0) 
+            {
+                areAllEmpty = 0;
+                for (int j = 0; j < vetorPrincipal[i].capacidade; size++, j++); 
+            }
+        }
+    }
+    
+    if (size == 0)
+        return TODAS_ESTRUTURAS_AUXILIARES_VAZIAS;
+    //
+
+    bubbleSort(vetorAux, size);
+
+    return SUCESSO;
+}
+
+
+
 int modificarTamanhoEstruturaAuxiliar(int posicao, int novoTamanho) {
     if (verificarPosicao(posicao) == POSICAO_INVALIDA) return POSICAO_INVALIDA;
     if (vetorPrincipal[posicao - 1].elementos == NULL) return SEM_ESTRUTURA_AUXILIAR;
@@ -142,7 +197,7 @@ int modificarTamanhoEstruturaAuxiliar(int posicao, int novoTamanho) {
     return SUCESSO;
 }
 
-int getQuantidadeElementos(int posicao) {
+int getQuantidadeElementosEstruturaAuxiliar(int posicao) {
     if (verificarPosicao(posicao) == POSICAO_INVALIDA) return POSICAO_INVALIDA;
     if (vetorPrincipal[posicao - 1].elementos == NULL) return SEM_ESTRUTURA_AUXILIAR;
     if (vetorPrincipal[posicao - 1].qtdElementos == 0) return ESTRUTURA_AUXILIAR_VAZIA;
