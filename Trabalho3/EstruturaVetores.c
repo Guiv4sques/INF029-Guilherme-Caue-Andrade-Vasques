@@ -15,6 +15,24 @@ EstruturaAux *vetorPrincipal;
 
 // Inicializa as estruturas auxiliares
 void inicializar() {
+        const char *fileName = "db.txt";
+    FILE *fp;
+
+    fp = fopen(fileName, "r");
+
+    if (fp == NULL) {
+        printf("Arquivo '%s' não existe. Criando '%s'.\n", fileName, fileName);
+        fp = fopen(fileName, "w");
+        if (fp == NULL) {
+            printf("Erro ao criar o arquivo '%s'.\n", fileName);
+            return;
+        }
+        printf("Arquivo criado com sucesso!\n");
+    }else{
+        printf("Arquivo '%s' encontrado!\n", fileName);
+    }
+    fclose(fp);
+    
     vetorPrincipal = malloc(sizeof(EstruturaAux) * TAMANHO_MAX);
     for (int i = 0; i < TAMANHO_MAX; i++) {
         vetorPrincipal[i].elementos = NULL;
@@ -245,6 +263,17 @@ void destruirListaEncadeadaComCabecote(No **inicio) {
 
 
 void finalizar() {
+    printf("Salvando arquivo...\n");
+    const char *fileName = "db.txt";
+    int save = saveFile(fileName);
+
+    if(save == 1){
+        printf("Arquivo salvo com sucesso!\n");
+    }
+    else{
+        printf("Erro ao salvar arquivo!\n");
+    }
+    
     for (int i = 0; i < TAMANHO_MAX; i++) {
         if (vetorPrincipal[i].elementos != NULL) {
             free(vetorPrincipal[i].elementos);
