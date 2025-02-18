@@ -23,8 +23,18 @@ int calcularFatorial(int num) {
     return fatorial;
 }
 
+int teste(int a){
+    int val;
+    if (a == 2)
+        val = 3;
+    else
+        val = 4;
+
+    return val;
+}
+
 // Validação de data (Q1)
-int validarData(char data[]) {
+int q1(char data[]) {
     int valida = 1;
     DataQuebrada dataExtraida = extrairData(data);
     
@@ -42,13 +52,13 @@ int validarData(char data[]) {
 }
 
 // Diferença entre duas datas (Q2)
-DiasMesesAnos calcularDiferencaDatas(char dataInicio[], char dataFim[]) {
+DiasMesesAnos q2(char dataInicio[], char dataFim[]) {
     DiasMesesAnos resultado;
-    if (!validarData(dataInicio)) {
+    if (!q1(dataInicio)) {
         resultado.retorno = 2;
         return resultado;
     }
-    if (!validarData(dataFim)) {
+    if (!q1(dataFim)) {
         resultado.retorno = 3;
         return resultado;
     }
@@ -79,7 +89,7 @@ DiasMesesAnos calcularDiferencaDatas(char dataInicio[], char dataFim[]) {
 }
 
 // Contagem de ocorrência de caractere (Q3)
-int contarCaracter(char *texto, char caractere, int sensivel) {
+int q3(char *texto, char caractere, int sensivel) {
     int contador = 0;
     char *textoProcessado = malloc(strlen(texto) + 1);
     strcpy(textoProcessado, texto);
@@ -101,8 +111,41 @@ int contarCaracter(char *texto, char caractere, int sensivel) {
     return contador;
 }
 
+//  Encontrar palavra em texto (Q4)
+int q4(char *strTexto, char *strBusca, int posicoes[30]){
+    int qtdOcorrencias = 0;
+    int posicao = 0;
+    int len = strlen(strBusca);
+    removerAcentos(strTexto);
+    removerAcentos(strBusca);
+
+    for(int i = 0; i<strlen(strTexto);){
+      int achou = 0;
+      if(strTexto[i]==strBusca[0]){
+        achou=1;
+        for(int j=i, k=0; k<len; j++,k++){
+          if(strBusca[k]!=strTexto[j])achou=0;
+        }
+        if(achou){
+          qtdOcorrencias++;
+          posicoes[posicao] = i+1;
+          posicao++;
+          posicoes[posicao] = i+len;
+          posicao++;
+
+          i += len;
+        }else{
+          i++;
+        }
+      }
+      if(!achou)i++;
+    }
+
+    return qtdOcorrencias;
+}
+
 // Inverter número (Q5)
-int inverterNumero(int numero) {
+int q5(int numero) {
     int invertido = 0;
     while (numero != 0) {
         invertido = invertido * 10 + (numero % 10);
@@ -112,7 +155,7 @@ int inverterNumero(int numero) {
 }
 
 // Verificar número dentro de outro número (Q6)
-int contarOcorrenciasNumero(int base, int busca) {
+int q6(int base, int busca) {
     int contador = 0, divisor = 1;
     while (busca / divisor != 0) divisor *= 10;
     while (base != 0) {
