@@ -27,6 +27,8 @@ int getQuantidadeElementosEstruturaAuxiliar(int posicao);
 No *montarListaEncadeadaComCabecote();
 void getDadosListaEncadeadaComCabecote(No *inicio, int vetorAux[]);
 void destruirListaEncadeadaComCabecote(No **inicio);
+int saveFile(const char *fileName);
+int readFile(const char *fileName);
 
 void inicializar();
 void finalizar();
